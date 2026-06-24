@@ -1,0 +1,89 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+// Öğrenciyi temsil eden Nesne Yönelimli Sınıf (Class)
+class Ogrenci {
+private:
+    std::string okulNo;
+    std::string adSoyad;
+    double notOrtalamasi;
+
+public:
+    // Kurucu Fonksiyon (Constructor)
+    Ogrenci(std::string no, std::string ad, double notOrt) {
+        okulNo = no;
+        adSoyad = ad;
+        notOrtalamasi = notOrt;
+    }
+
+    // Bilgileri ekrana yazdıran fonksiyon (Metot)
+    void bilgileriGoster() const {
+        std::cout << "No: " << okulNo << " | Ad Soyad: " << adSoyad << " | Not Ortalamasi: " << notOrtalamasi << "\n";
+    }
+
+    // Arama yapmak için numara döndüren yardımcı metot (Getter)
+    std::string getOkulNo() const { return okulNo; }
+};
+
+// Sistemi yönetecek ana sınıf
+class OtomasyonSistemi {
+private:
+    std::vector<Ogrenci> ogrenciler; // Dinamik öğrenci listesi
+
+public:
+    void ogrenciEkle() {
+        std::string no, ad;
+        double notOrt;
+
+        std::cout << "\n--- YENI OGRENCI EKLE ---\n";
+        std::cout << "Okul Numarasi: "; std::cin >> no;
+        std::cin.ignore(); // Satır sonu tamponunu temizle
+        std::cout << "Adiniz ve Soyadiniz: "; std::getline(std::cin, ad);
+        std::cout << "Not Ortalamasi: "; std::cin >> notOrt;
+
+        // Listeye yeni bir Öğrenci nesnesi üreterek ekliyoruz
+        ogrenciler.push_back(Ogrenci(no, ad, notOrt));
+        std::cout << "Ogrenci basariyla sisteme kaydedildi! \n\n";
+    }
+
+    void ogrencileriListele() const {
+        std::cout << "\n--- KAYITLI OGRENCI LISTESI ---\n";
+        if (ogrenciler.empty()) {
+            std::cout << "Sistemde kayitli ogrenci bulunmamaktadir.\n\n";
+            return;
+        }
+        for (const auto& ogrenci : ogrenciler) {
+            ogrenci.bilgileriGoster();
+        }
+        std::cout << "--------------------------------\n\n";
+    }
+};
+
+int main() {
+    OtomasyonSistemi sistem;
+    int secim;
+
+    do {
+        std::cout << "=== OGRENCI KAYIT OTOMASYONU ===\n";
+        std::cout << "1. Ogrenci Ekle\n";
+        std::cout << "2. Ogrencileri Listele\n";
+        std::cout << "3. Cikis\n";
+        std::cout << "Seciminiz: ";
+        
+        if (!(std::cin >> secim)) {
+            std::cin.clear();
+            std::cin.ignore(10000, '\n');
+            secim = 0;
+        }
+
+        switch (secim) {
+            case 1: sistem.ogrenciEkle(); break;
+            case 2: sistem.ogrencileriListele(); break;
+            case 3: std::cout << "\nOtomasyondan cikiliyor. Iyi gunler! \n"; break;
+            default: std::cout << "\nGecersiz secim, tekrar deneyin!\n\n";
+        }
+    } while (secim != 3);
+
+    return 0;
+}
